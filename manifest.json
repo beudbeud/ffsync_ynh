@@ -1,0 +1,33 @@
+{
+    "name": "Firefox Sync Server",
+    "id": "ffsync",
+    "description": {
+        "en": "",
+        "fr": ""
+    },
+    "developer": {
+        "name": "beudbeud",
+        "email": "beudbeud@beudibox.fr",
+        "url": "https://github.com/balu-/FSyncMS"
+    },
+    "multi_instance": "false",
+    "arguments": {
+        "install" : [
+            {
+                "name": "domain",
+                "ask": {
+                    "en": "Choose a domain for Firefox-Sync Server"
+                },
+                "example": "domain.org"
+            },
+            {
+                "name": "path",
+                "ask": {
+                    "en": "Choose a path for Firefox-Sync Server"
+                },
+                "example": "/ffsync",
+                "default": "/ffsync"
+            }
+        ]
+    }
+}
