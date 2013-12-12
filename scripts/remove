@@ -1,7 +1,7 @@
 #!/bin/bash
 
-db_user=wordpress
-db_name=wordpress
+db_user=ffsync
+db_name=ffsync
 root_pwd=$(sudo cat /etc/yunohost/mysql)
 domain=$(sudo yunohost app setting ffsync domain)
 
