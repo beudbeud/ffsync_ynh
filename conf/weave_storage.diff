@@ -37,8 +37,3 @@
          log_error("Create User - Username: ".$username."|".$password);
  
          try
-@@ -813,4 +843,3 @@
- 
- 
- ?>
--
