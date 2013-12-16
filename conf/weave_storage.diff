@@ -1,0 +1,33 @@
+722a723,752
+> 	$mail = 
+>         $dn = "ou=users,dc=yunohost,dc=org";
+>         $filter = "(&(objectclass=inetOrgPerson)(mail=".$mail."))";
+>         $justthese = array("uid");
+>         // connect to ldap server
+>         $ldapconn = ldap_connect("localhost")
+>                 or die("Could not connect to LDAP server.");
+> 
+>         ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
+>         ldap_set_option($ldapconn, LDAP_OPT_REFERRALS, 0);
+> 
+>         if ($ldapconn) {
+>             $ldapbind = @ldap_bind($ldapconn);
+>             if (! $ldapbind) { 
+>                 log_error("create_user:" . $exception->getMessage());
+>                 error_log("create_user:" . $exception->getMessage());
+>                 return 0;
+>             }
+>             else { 
+>                 $sr = ldap_search($ldapconn, $dn, $filter, $justthese);
+>                 $info = ldap_get_entries($ldapconn, $sr);
+>                 if ( ! $info["count"]) {
+>                    log_error("create_user:" . $exception->getMessage());
+>                    error_log("create_user:" . $exception->getMessage());
+>                    return 0;
+>                 }
+>             }   
+>         @ldap_unbind($ldapconn);
+>         }
+> 
+816d845
+< 
