@@ -1,5 +1,5 @@
 722a723,752
-> 	   $mail = $username;
+> 	 $mail = $username;
 >         $dn = "ou=users,dc=yunohost,dc=org";
 >         $filter = "(&(objectclass=inetOrgPerson)(mail=".$mail."))";
 >         $justthese = array("uid");
