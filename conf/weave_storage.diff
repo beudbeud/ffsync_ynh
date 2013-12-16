@@ -4,7 +4,7 @@
  
      function create_user($username, $password)
      {
-+        $mail = $auth_user 
++        $mail = $auth_user;
 +        $dn = "ou=users,dc=yunohost,dc=org";
 +        $filter = "(&(objectclass=inetOrgPerson)(mail=".$mail."))";
 +        $justthese = array("uid");
