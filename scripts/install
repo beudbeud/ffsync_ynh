@@ -40,7 +40,7 @@ sed -i "s@PATHTOCHANGE@$path@g" ../conf/nginx.conf*
 sed -i "s@ALIASTOCHANGE@$final_path/@g" ../conf/nginx.conf*
 sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/ffsync.conf
 sudo cp ../conf/weave_storage.diff /tmp/weave_storage.diff
-sudo patch -p0 $final_path/weave_storage.php < /tmp/weave_storage.diff
+#sudo patch -p0 $final_path/weave_storage.php < /tmp/weave_storage.diff
 sudo rm $final_path/setup.php
 
 # Reload Nginx and regenerate SSOwat conf
