@@ -8,7 +8,7 @@
     // firefox sync server url, this should end with a /
     // e.g. https://YourDomain.de/Folder_und_ggf_/index.php/
     // 
-    define("FSYNCMS_ROOT", "https://URLFFSYNC/");
+    define("FSYNCMS_ROOT", "https://URLFFSYNC/index.php/");
 
     // Database connection credentials
     // 
