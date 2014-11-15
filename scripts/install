@@ -17,33 +17,65 @@ db_pwd=$(dd if=/dev/urandom bs=1 count=200 2> /dev/null | tr -c -d '[A-Za-z0-9]'
 db_user=ffsync
 
 # Initialize database and store mysql password for upgrade
-sudo yunohost app initdb $db_user -p $db_pwd -s $(readlink -e ../conf/ffsync.sql)
+sudo yunohost app initdb $db_user -p $db_pwd
 sudo yunohost app setting ffsync mysqlpwd -v $db_pwd
 
+# Check depends installation
+sudo apt-get install python-dev git-core python-virtualenv uwsgi
+
+# Check Swap
+tmp_swap_file=/tmp/ffsync_swapfile
+if [ $(sudo swapon -s | wc -l) = 1 ];
+then
+	sudo dd if=/dev/zero of=$tmp_swap_file bs=1M count=256
+	sudo chmod 600 $tmp_swap_file
+	sudo mkswap $tmp_swap_file
+	sudo swapon $tmp_swap_file
+fi
+
 # Copy files to the right place
-final_path=/var/www/ffsync
+final_path=/opt/yunohost/ffsync
 sudo mkdir -p $final_path
 sudo cp -a ../sources/* $final_path
-sudo cp ../conf/settings.php $final_path/
+#sudo cp ../conf/settings.php $final_path/
 
 # Change variables in FSyncMS configuration
-sudo sed -i "s/yunouser/$db_user/g" $final_path/settings.php
-sudo sed -i "s/yunopass/$db_pwd/g" $final_path/settings.php
-sudo sed -i "s/yunobase/$db_user/g" $final_path/settings.php
-sudo sed -i "s@URLFFSYNC@$domain$path@g" $final_path/settings.php
+#sudo sed -i "s/yunouser/$db_user/g" $final_path/settings.php
+#sudo sed -i "s/yunopass/$db_pwd/g" $final_path/settings.php
+#sudo sed -i "s/yunobase/$db_user/g" $final_path/settings.php
+#sudo sed -i "s@URLFFSYNC@$domain$path@g" $final_path/settings.php
 
-# Set permissions to roundcube directory
-sudo chown -R www-data: $final_path
+# Set permissions to ffsync directory
+sudo useradd ffsync -d $final_path
+sudo chown ffsync:ffsync -R $final_path
+
+# Copy uwsgi config
+sudo cp ../conf/ffsync.ini /etc/uwsgi/apps-available/
+sudo ln -s /etc/uwsgi/apps-available/ffsync.ini /etc/uwsgi/apps-enabled/
 
 # Modify Nginx configuration file and copy it to Nginx conf directory
-sed -i "s@PATHTOCHANGE@$path@g" ../conf/nginx.conf*
-sed -i "s@ALIASTOCHANGE@$final_path/@g" ../conf/nginx.conf*
+sed -i "s@PATHTOCHANGE@$path@g" ../conf/nginx.conf
+sed -i "s@ALIASTOCHANGE@$final_path/@g" ../conf/nginx.conf
 sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/ffsync.conf
-sudo cp ../conf/weave_storage.diff /tmp/weave_storage.diff
-#sudo patch -p0 $final_path/weave_storage.php < /tmp/weave_storage.diff
-sudo rm $final_path/setup.php
+sudo sed -i -e "s@ynhbaseurl@$domain$path@g" $final_path/syncserver.ini
+
+# Init virtualenv
+cd $final_path && sudo make build
+
+# Disable swapfile
+if [ -f $tmp_swap_file ];
+then
+        sudo swapoff $tmp_swap_file
+        sudo rm -f $tmp_swap_file
+fi
+
+# Fix permission
+sudo find $final_path/ -type d -exec chmod 2755 {} \;
+sudo find $final_path/ -type f -exec chmod g+r,o+r {} \;
+sudo usermod -a -G ffsync www-data
 
 # Reload Nginx and regenerate SSOwat conf
+sudo service uwsgi restart
 sudo service nginx reload
 sudo yunohost app setting ffsync skipped_uris -v "/"
 sudo yunohost app ssowatconf
