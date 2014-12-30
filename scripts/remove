@@ -8,8 +8,8 @@ domain=$(sudo yunohost app setting ffsync domain)
 mysql -u root -p$root_pwd -e "DROP DATABASE $db_name ; DROP USER $db_user@localhost ;"
 sudo rm -rf /opt/yunohost/ffsync
 sudo rm -f /etc/nginx/conf.d/$domain.d/ffsync.conf
-sudo rm -f /etc/uwsgi/apps-enabled/searx.ini
-sudo rm -f /etc/uwsgi/apps-available/searx.ini
+sudo rm -f /etc/uwsgi/apps-enabled/ffsync.ini
+sudo rm -f /etc/uwsgi/apps-available/ffsync.ini
 
 sudo service uwsgi stop
 sudo killall uwsgi
