@@ -6,23 +6,18 @@ TOOLS := $(addprefix $(ENV)/bin/,flake8 nosetests)
 # Hackety-hack around OSX system python bustage.
 # The need for this should go away with a future osx/xcode update.
 ARCHFLAGS = -Wno-error=unused-command-line-argument-hard-error-in-future
-
-# Hackety-hack around errors duing compile of ultramemcached.
-CFLAGS = -Wno-error
-
-INSTALL = CFLAGS=$(CFLAGS) ARCHFLAGS=$(ARCHFLAGS) $(ENV)/bin/pip install
-
+INSTALL = ARCHFLAGS=$(ARCHFLAGS) $(ENV)/bin/pip install
 
 .PHONY: all
 all: build
 
 .PHONY: build
-build: | $(ENV)/COMPLETE
-$(ENV)/COMPLETE: requirements.txt
+build: | $(ENV)
+$(ENV): requirements.txt
 	$(VIRTUALENV) --no-site-packages $(ENV)
 	$(INSTALL) -r requirements.txt
 	$(ENV)/bin/python ./setup.py develop
-	touch $(ENV)/COMPLETE
+	touch $(ENV)
 
 .PHONY: test
 test: | $(TOOLS)
@@ -38,11 +33,11 @@ test: | $(TOOLS)
 		--use-token-server http://localhost:5000/token/1.0/sync/1.5; \
 	kill $$SERVER_PID
 
-$(TOOLS): | $(ENV)/COMPLETE
+$(TOOLS): | $(ENV)
 	$(INSTALL) nose flake8
 
 .PHONY: serve
-serve: | $(ENV)/COMPLETE
+serve: | $(ENV)
 	$(ENV)/bin/pserve ./syncserver.ini
 
 .PHONY: clean
