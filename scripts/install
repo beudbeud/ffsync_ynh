@@ -77,6 +77,6 @@ sudo usermod -a -G ffsync www-data
 # Reload Nginx and regenerate SSOwat conf
 sudo service uwsgi restart
 sudo service nginx reload
-yunohost service add uwsgi -l /var/log/uwsgi/app/ffsync.log
+sudo yunohost service add uwsgi -l /var/log/uwsgi/app/ffsync.log
 sudo yunohost app setting ffsync skipped_uris -v "/"
 sudo yunohost app ssowatconf
