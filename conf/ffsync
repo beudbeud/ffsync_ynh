@@ -1,0 +1,64 @@
+#!/bin/bash -x
+# /etc/init.d/sync
+# version 0.1 2013-03-12 (YYYY-MM-DD)
+
+### BEGIN INIT INFO
+# Provides:   sync
+# Required-Start: $local_fs $remote_fs
+# Required-Stop:  $local_fs $remote_fs
+# Should-Start:   $network
+# Should-Stop:    $network
+# Default-Start:  2 3 4 5
+# Default-Stop:   0 1 6
+# Short-Description:    Mozilla Sync server
+# Description:    Starts the mozilla sync server
+### END INIT INFO
+
+# Source function library.
+#. /etc/rc.d/init.d/functions
+
+prog=sync
+SYNC_USER=ffsync
+SYNC_HOME=/opt/yunohost/ffsync
+CPU_COUNT=2
+pidfile=/tmp/sync.pid
+lockfile=/var/run/mozilla/sync.lock
+conffile=${SYNC_HOME}/syncserver.ini
+GUNICORN=${SYNC_HOME}/local/bin/gunicorn_paster
+GUNICORN_ARGS="--access-logfile /var/log/ffsync.log --daemon -p $pidfile"
+#INVOCATION="$GUNICORN $GUNICORN_ARGS $conffile"
+
+start () {
+    echo -n "Starting $prog"
+    start-stop-daemon --start -c ${SYNC_USER} --exec $GUNICORN -- $GUNICORN_ARGS $conffile 
+    RETVAL=$?
+    echo
+    [ $RETVAL = 0 ] && touch ${lockfile}
+    return $RETVAL
+}
+
+stop() {
+    echo "Stopping $prog"
+    start-stop-daemon --stop --quiet --oknodo --pidfile ${pidfile}
+    #log_end_msg $?
+    rm -f ${pidfile}
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    *)
+        echo $"Usage: $prog {start|stop|restart|help}"
+        RETVAL=2
+esac
+
+exit $RETVAL
+
