@@ -24,8 +24,8 @@ CPU_COUNT=2
 pidfile=/tmp/sync.pid
 lockfile=/var/run/sync.lock
 conffile=${SYNC_HOME}/syncserver.ini
-GUNICORN=${SYNC_HOME}/local/bin/gunicorn_paster
-GUNICORN_ARGS="--access-logfile /var/log/ffsync.log --daemon -p $pidfile"
+GUNICORN=${SYNC_HOME}/local/bin/gunicorn
+GUNICORN_ARGS="--paste --access-logfile /var/log/ffsync.log --daemon -p $pidfile"
 #INVOCATION="$GUNICORN $GUNICORN_ARGS $conffile"
 
 start () {
