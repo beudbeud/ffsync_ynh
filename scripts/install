@@ -21,7 +21,7 @@ sudo yunohost app initdb $db_user -p $db_pwd
 sudo yunohost app setting ffsync mysqlpwd -v $db_pwd
 
 # Check depends installation
-sudo apt-get install git-core make python-dev python-virtualenv uwsgi uwsgi-core uwsgi-plugin-python
+sudo apt-get install make python-dev python-virtualenv
 
 # Check Swap
 tmp_swap_file=/tmp/ffsync_swapfile
