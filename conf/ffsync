@@ -30,7 +30,8 @@ GUNICORN_ARGS="--paste  $conffile --access-logfile /var/log/ffsync.log --daemon 
 
 start () {
     echo -n "Starting $prog"
-    start-stop-daemon --start -c ${SYNC_USER} --exec $GUNICORN -- $GUNICORN_ARGS $conffile 
+    start-stop-daemon --start -c ffsync --exec /opt/yunohost/ffsync/local/bin/gunicorn_paster -- /opt/yunohost/ffsync/syncserver.ini --access-logfile /tmp/ffsync.log --daemon -p /tmp/sync.pid
+    #start-stop-daemon --start -c ${SYNC_USER} --exec $GUNICORN -- $GUNICORN_ARGS $conffile 
     RETVAL=$?
     echo
     [ $RETVAL = 0 ] && touch ${lockfile}
