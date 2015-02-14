@@ -43,10 +43,6 @@ sudo cp ../conf/ffsync /etc/init.d/
 sudo useradd ffsync -d $final_path
 sudo chown ffsync:ffsync -R $final_path
 
-# Copy uwsgi config
-sudo cp ../conf/ffsync.ini /etc/uwsgi/apps-available/
-sudo ln -s /etc/uwsgi/apps-available/ffsync.ini /etc/uwsgi/apps-enabled/
-
 # Modify Nginx configuration file and copy it to Nginx conf directory
 secret=$(head -c 20 /dev/urandom | sha1sum | cut -d " " -f1)
 sed -i "s@PATHTOCHANGE@$path@g" ../conf/nginx.conf
@@ -80,8 +76,7 @@ sudo update-rc.d ffsync defaults
 sudo service ffsync start
 
 # Reload Nginx and regenerate SSOwat conf
-sudo service uwsgi restart
 sudo service nginx reload
-sudo yunohost service add uwsgi -l /var/log/uwsgi/app/ffsync.log
+sudo yunohost service add firefox-sync -l /var/log/ffsync.log
 sudo yunohost app setting ffsync skipped_uris -v "/"
 sudo yunohost app ssowatconf
