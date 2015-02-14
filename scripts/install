@@ -73,7 +73,8 @@ sudo usermod -a -G ffsync www-data
 #enable services
 sudo chmod +x /etc/init.d/ffsync
 sudo update-rc.d ffsync defaults
-sudo service ffsync start
+$final_path/local/bin/gunicorn_paster $final_path/syncserver.ini --access-logfile /var/log/ffsync.log --daemon -p /tmp/sync.pid
+sudo service ffsync restart
 
 # Reload Nginx and regenerate SSOwat conf
 sudo service nginx reload
