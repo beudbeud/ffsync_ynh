@@ -26,12 +26,10 @@ lockfile=/var/run/sync.lock
 conffile=${SYNC_HOME}/syncserver.ini
 GUNICORN=${SYNC_HOME}/local/bin/gunicorn
 GUNICORN_ARGS="--paste  $conffile --access-logfile /var/log/ffsync.log --daemon -p $pidfile"
-#INVOCATION="$GUNICORN $GUNICORN_ARGS"
 
 start () {
     echo -n "Starting $prog"
-    start-stop-daemon --start -c ffsync --exec /opt/yunohost/ffsync/local/bin/gunicorn_paster -- /opt/yunohost/ffsync/syncserver.ini --access-logfile /tmp/ffsync.log --daemon -p /tmp/sync.pid
-    #start-stop-daemon --start -c ${SYNC_USER} --exec $GUNICORN -- $GUNICORN_ARGS $conffile 
+    start-stop-daemon --start -c ${SYNC_USER} --exec $GUNICORN -- $GUNICORN_ARGS
     RETVAL=$?
     echo
     [ $RETVAL = 0 ] && touch ${lockfile}
