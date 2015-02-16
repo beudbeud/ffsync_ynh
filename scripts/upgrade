@@ -20,6 +20,7 @@ final_path=/opt/yunohost/ffsync
 sudo mkdir -p $final_path
 sudo cp -a ../sources/* $final_path
 sudo cp ../conf/ffsync /etc/init.d/
+sudo cp ../conf/ffsync.logrotate /etc/logrotate.d/ffsync
 
 # Set permissions to ffsync directory
 sudo useradd ffsync -d $final_path
