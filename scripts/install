@@ -33,6 +33,9 @@ then
 	sudo swapon $tmp_swap_file
 fi
 
+# Create ffsync user
+sudo useradd ffsync -d $final_path
+
 # Copy files to the right place
 final_path=/opt/yunohost/ffsync
 sudo mkdir -p $final_path
@@ -43,7 +46,6 @@ sudo touch /var/log/ffsync.log
 sudo chown ffsync /var/log/ffsync.log
 
 # Set permissions to ffsync directory
-sudo useradd ffsync -d $final_path
 sudo chown ffsync:ffsync -R $final_path
 
 # Modify Nginx configuration file and copy it to Nginx conf directory
