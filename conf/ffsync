@@ -43,12 +43,25 @@ stop() {
     rm -f ${pidfile}
 }
 
+status(){
+        if [[ -f ${pidfile} ]]; then
+                echo "Status: running."
+                exit 0;
+        else
+                echo "Status: not running."
+                exit 1;
+        fi
+}
+
 case "$1" in
     start)
         start
         ;;
     stop)
         stop
+        ;;
+    status)
+        status
         ;;
     restart)
         stop
