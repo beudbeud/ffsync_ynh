@@ -24,9 +24,16 @@ sudo yunohost app setting ffsync mysqlpwd -v $db_pwd
 sudo apt-get install make python-dev python-virtualenv -y
 
 # Check Swap
-tmp_swap_file=/tmp/ffsync_swapfile
 if [ $(sudo swapon -s | wc -l) = 1 ];
 then
+	# It is NOT possible to setup a swap file on a tmpfs filesystem
+	mount | grep /tmp | grep tmpfs > /dev/null 2>&1
+	if [ $? = 1 ];
+	then
+		tmp_swap_file=/tmp/ffsync_swapfile
+	else
+		tmp_swap_file=/var/cache/ffsync_swapfile
+	fi
 	sudo dd if=/dev/zero of=$tmp_swap_file bs=1M count=256
 	sudo chmod 600 $tmp_swap_file
 	sudo mkswap $tmp_swap_file
