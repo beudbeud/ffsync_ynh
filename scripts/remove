@@ -12,6 +12,7 @@ sudo service ffsync stop
 sudo update-rc.d ffsync remove
 sudo rm /etc/init.d/ffsync
 sudo rm /etc/logrotate.d/ffsync
+sudo yunohost service remove ffsync
 
 sudo service nginx reload
 sudo userdel ffsync
