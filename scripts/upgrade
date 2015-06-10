@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Retrieve arguments
-domain=$(sudo yunohost app setting searx domain)
-path=$(sudo yunohost app setting searx path)
+domain=$(sudo yunohost app setting ffsync domain)
+path=$(sudo yunohost app setting ffsync path)
 
 
 # Check Swap
