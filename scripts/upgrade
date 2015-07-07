@@ -31,6 +31,9 @@ sed -i "s@PATHTOCHANGE@$path@g" ../conf/nginx.conf
 sed -i "s@ALIASTOCHANGE@$final_path/@g" ../conf/nginx.conf
 sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/ffsync.conf
 
+# stop service before upgrade
+service ffsync stop
+
 # Init virtualenv
 cd $final_path && sudo make build && sudo ./local/bin/easy_install gunicorn
 
