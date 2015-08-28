@@ -30,6 +30,12 @@ sudo chown ffsync:ffsync -R $final_path
 sed -i "s@PATHTOCHANGE@$path@g" ../conf/nginx.conf
 sed -i "s@ALIASTOCHANGE@$final_path/@g" ../conf/nginx.conf
 sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/ffsync.conf
+sudo cp ../conf/syncserver.ini $final_path/syncserver.ini
+sudo sed -i -e "s@ynhbaseurl@$domain$path@g" $final_path/syncserver.ini
+sudo sed -i -e "s@changesecret@$secret@g" $final_path/syncserver.ini
+sudo sed -i "s/yunouser/$db_user/g" $final_path/syncserver.ini
+sudo sed -i "s/yunopass/$db_pwd/g" $final_path/syncserver.ini
+sudo sed -i "s/yunobase/$db_user/g" $final_path/syncserver.ini
 
 # stop service before upgrade
 service ffsync stop
