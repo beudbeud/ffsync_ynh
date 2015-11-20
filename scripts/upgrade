@@ -38,7 +38,7 @@ sudo sed -i "s/yunopass/$db_pwd/g" $final_path/syncserver.ini
 sudo sed -i "s/yunobase/$db_user/g" $final_path/syncserver.ini
 
 # stop service before upgrade
-service ffsync stop
+sudo service ffsync stop
 
 # Init virtualenv
 cd $final_path && sudo make build && sudo ./local/bin/easy_install gunicorn
