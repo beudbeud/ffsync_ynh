@@ -69,7 +69,7 @@ sudo sed -i "s/yunobase/$db_user/g" $final_path/syncserver.ini
 cd $final_path && sudo make build && sudo ./local/bin/easy_install gunicorn
 
 # Disable swapfile
-if [ -f $tmp_swap_file ];
+if [ -f $tmp_swap_file ] || [ -z "$tmp_swap_file" ];
 then
         sudo swapoff $tmp_swap_file
         sudo rm -f $tmp_swap_file
