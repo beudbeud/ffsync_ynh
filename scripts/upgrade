@@ -3,12 +3,22 @@
 # Retrieve arguments
 domain=$(sudo yunohost app setting ffsync domain)
 path=$(sudo yunohost app setting ffsync path)
+db_pwd=$(sudo yunohost app setting  ffsync mysqlpwd)
+db_user=ffsync
+
 
 
 # Check Swap
-tmp_swap_file=/tmp/ffsync_swapfile
 if [ $(sudo swapon -s | wc -l) = 1 ];
 then
+	# It is NOT possible to setup a swap file on a tmpfs filesystem
+	mount | grep /tmp | grep tmpfs > /dev/null 2>&1
+	if [ $? = 1 ];
+	then
+		tmp_swap_file=/tmp/ffsync_swapfile
+	else
+		tmp_swap_file=/var/cache/ffsync_swapfile
+	fi
 	sudo dd if=/dev/zero of=$tmp_swap_file bs=1M count=256
 	sudo chmod 600 $tmp_swap_file
 	sudo mkswap $tmp_swap_file
@@ -44,7 +54,7 @@ sudo service ffsync stop
 cd $final_path && sudo make build && sudo ./local/bin/easy_install gunicorn
 
 # Disable swapfile
-if [ -f $tmp_swap_file ];
+if [ -f $tmp_swap_file ] || [ -z "$tmp_swap_file" ];
 then
         sudo swapoff $tmp_swap_file
         sudo rm -f $tmp_swap_file
@@ -58,7 +68,9 @@ sudo usermod -a -G ffsync www-data
 #enable services
 sudo chmod +x /etc/init.d/ffsync
 sudo update-rc.d ffsync defaults
-sudo service ffsync start
+sudo service ffsync restart
+sudo service ffsync restart
+sudo service ffsync restart
 
 # Reload Nginx and regenerate SSOwat conf
 sudo service nginx reload
