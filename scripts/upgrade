@@ -5,8 +5,16 @@ domain=$(sudo yunohost app setting ffsync domain)
 path=$(sudo yunohost app setting ffsync path)
 db_pwd=$(sudo yunohost app setting  ffsync mysqlpwd)
 db_user=ffsync
+final_path=/opt/yunohost/ffsync
 
-
+# Get secret variable
+secret=$(sudo yunohost app setting ffsync secret)
+# Get from conf file if not defined
+if [[ -z $secret ]]
+then
+	secret=$(sudo grep "secret =" $final_path/syncserver.ini | cut -d" " -f3)
+	sudo yunohost app setting $app secret -v $secret
+fi
 
 # Check Swap
 if [ $(sudo swapon -s | wc -l) = 1 ];
@@ -26,7 +34,6 @@ then
 fi
 
 # Copy files to the right place
-final_path=/opt/yunohost/ffsync
 sudo mkdir -p $final_path
 sudo cp -a ../sources/* $final_path
 sudo cp ../conf/ffsync /etc/init.d/
