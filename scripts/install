@@ -22,7 +22,7 @@ sudo yunohost app setting ffsync mysqlpwd -v $db_pwd
 
 # Generate random password and save
 secret=$(head -c 20 /dev/urandom | sha1sum | cut -d " " -f1)
-sudo yunohost app setting $app secret -v $secret
+sudo yunohost app setting ffsync secret -v $secret
 
 # Check depends installation
 sudo apt-get install make python-dev python-virtualenv -y

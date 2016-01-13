@@ -13,7 +13,7 @@ secret=$(sudo yunohost app setting ffsync secret)
 if [[ -z $secret ]]
 then
 	secret=$(sudo grep "secret =" $final_path/syncserver.ini | cut -d" " -f3)
-	sudo yunohost app setting $app secret -v $secret
+	sudo yunohost app setting ffsync secret -v $secret
 fi
 
 # Check Swap
